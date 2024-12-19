@@ -14,7 +14,11 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+                // Allow requests from your Vercel frontend URL
+                registry.addMapping("/**")
+                        .allowedOrigins("https://not-another-resume-ui.vercel.app") // Replace with your Vercel URL
+                        .allowedMethods("GET", "POST", "PUT", "DELETE") // Allow necessary HTTP methods
+                        .allowedHeaders("*"); // Allow all headers
             }
         };
     }
