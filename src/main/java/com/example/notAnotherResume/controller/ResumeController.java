@@ -1,10 +1,19 @@
 package com.example.notAnotherResume.controller;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import com.example.notAnotherResume.model.ResumeRequest;
 import com.example.notAnotherResume.service.ResumeService;
 import com.example.notAnotherResume.util.HtmlUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 @RestController
 @RequestMapping("/resume")
@@ -14,7 +23,7 @@ public class ResumeController {
     private ResumeService pdfGenerationService;
 
     @PostMapping("/generate")
-    public String generateResume(@RequestBody ResumeRequest resumeRequest) {
+    public ResponseEntity<byte[]> generateResume(@RequestBody ResumeRequest resumeRequest) {
         try {
             // Fetch HTML template
             String htmlTemplate = HtmlUtil.getHtmlTemplate();
@@ -38,12 +47,31 @@ public class ResumeController {
             String fileName = resumeRequest.getFullName().replace(" ", "_") + "_resume.pdf";
             String filePath = pdfGenerationService.generatePdf(filledHtml, fileName);
 
-            // Return success message
-            return "Resume generated successfully and saved to: " + filePath;
+            // Read the generated PDF file as a byte array
+            File pdfFile = new File(filePath);
+            byte[] pdfContent = new byte[(int) pdfFile.length()];
+            try (InputStream inputStream = new FileInputStream(pdfFile)) {
+                inputStream.read(pdfContent);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(500).body(null); // Handle error
+            }
+
+            // Set headers for file download
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentDisposition(ContentDisposition.builder("attachment")
+                    .filename(fileName)
+                    .build());
+            headers.setContentType(MediaType.APPLICATION_PDF); // Set content type for PDF
+
+            // Return the PDF content as a response with headers
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(pdfContent);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "Failed to generate resume.";
+            return ResponseEntity.status(500).body(null); // Handle error
         }
     }
 }
