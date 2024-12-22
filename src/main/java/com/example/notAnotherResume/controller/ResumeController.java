@@ -38,6 +38,7 @@ public class ResumeController {
                     .replace("{{summary}}", resumeRequest.getSummary())
                     .replace("{{competencies}}", resumeRequest.getCompetencies())
                     .replace("{{experience}}", resumeRequest.getExperience())
+                    .replace("{{education}}", resumeRequest.getEducation())
                     .replace("{{achievements}}", resumeRequest.getAchievements())
                     .replace("{{hobbies}}", resumeRequest.getHobbies())
                     .replace("{{fluency}}", resumeRequest.getFluency())

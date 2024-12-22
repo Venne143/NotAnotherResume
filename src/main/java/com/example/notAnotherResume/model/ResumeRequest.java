@@ -10,7 +10,8 @@ public class ResumeRequest {
     private String summary;
     private String competencies;
     private String experience;
-    private String achievements;
+    private String education;
+	private String achievements;
     private String disclaimer;
     private String hobbies;
     private String fluency;
@@ -79,6 +80,14 @@ public class ResumeRequest {
     public void setExperience(String experience) {
         this.experience = experience;
     }
+    
+    public String getEducation() {
+		return education;
+	}
+
+	public void setEducation(String education) {
+		this.education = education;
+	}
 
     public String getAchievements() {
         return achievements;

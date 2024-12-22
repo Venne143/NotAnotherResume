@@ -76,6 +76,11 @@ public class HtmlUtil {
                         <h2>Experience</h2>
                         <p>{{experience}}</p>
                     </div>
+                     </div>
+                    <div class="section">
+                        <h2>Education</h2>
+                        <p>{{education}}</p>
+                    </div>
                     <div class="section">
                         <h2>Achievements</h2>
                         <p>{{achievements}}</p>
